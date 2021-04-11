@@ -2,6 +2,8 @@ from torch import load, from_numpy
 import torch.nn as nn
 import numpy as np
 from PIL import Image
+import sys
+import os
 
 class ToTorch(object):
     def __call__(self, image):
@@ -41,7 +43,7 @@ class Net(nn.Module):
         self.fc3 = nn.Linear(80, 1)
 
         self.sigmoid = nn.Sigmoid()
-        
+
     def forward(self, x, choice=0):
         x = x/225
         x = self.conv1(x)
@@ -54,7 +56,7 @@ class Net(nn.Module):
         x = self.batch_fc1(self.relu_fc1(self.fc1(x)))
         x = self.batch_fc2(self.relu_fc2(self.fc2(x)))
         x = self.sigmoid(self.fc3(x))
-        
+
         return x
 
 
@@ -62,13 +64,25 @@ model = Net()
 model.load_state_dict(load(r'Model\Model_new_v4\Model_new_v4'))
 model.eval()
 
-image = Image.open(r'Test_Image\Dog1.jpg')
-image = ToTorch()(image)
+def predict(name):
+    image = Image.open(name)
+    image = ToTorch()(image)
+    output = float(model(image.float()))>0.5
+    if int(output)==0:
+        print(name+" is a Cat")
+    else:
+        print(name+" is a Dog")
 
-
-output = float(model(image.float()))>0.5
-
-if int(output)==0:
-    print("Its a Cat")
-else:
-    print("Its a Dog")
+for i in sys.argv[1:]:
+    if(i.startswith("--")):         #opening folder
+        image_folder = i[2:]
+        if os.path.isdir(image_folder):
+            for img in os.listdir(image_folder):
+                predict(os.path.join(image_folder, img))
+    elif (i.startswith("-")):           #reading a txt file
+        with open(i[1:], 'r') as file:
+            names = file.read().splitlines()
+            for i in names:
+                predict(i)
+    else:
+        predict(i)
