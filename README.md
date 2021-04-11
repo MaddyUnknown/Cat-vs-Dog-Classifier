@@ -17,8 +17,11 @@ A binary classifier to check whether an image contains a cat or a dog
 
 ## Sample Images:
 
-![application example](https://github.com/MaddyUnknown/Application-form-Tkinter/blob/master/Readme_img/Application%20form.png)
-> ###### GUI of Application
+![application example](https://github.com/MaddyUnknown/Cat-vs-Dog-Classifier/blob/main/Test_Image/file_content.png)
+> ###### File Containing Image
+
+![result](https://github.com/MaddyUnknown/Cat-vs-Dog-Classifier/blob/main/Test_Image/test_Result.png)
+> ###### Prediction Result
 
 ## Languages and Tools used:
   ### Language:
